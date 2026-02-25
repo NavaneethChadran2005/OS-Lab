@@ -1,0 +1,159 @@
+//init 
+loadi(65, 7);
+loadi(66, 8);
+
+//int 10
+loadi(22, 35);
+loadi(23, 36);
+
+//exception handler
+loadi(2, 15);
+loadi(3, 16);
+
+//library
+loadi(63, 13);
+loadi(64, 14);
+
+//odd pgm
+loadi(83, 70);
+
+//even pgm
+loadi(84, 71);
+
+//timer
+loadi(4, 17);
+loadi(5, 18);
+
+//int 7
+loadi(16, 29);
+loadi(17, 30);
+
+//scheduler
+loadi(50, 63);
+loadi(51, 64);
+
+PTLR = 10;
+PTBR = PAGE_TABLE_BASE;
+
+//page table for init start from 20
+[PTBR+20] = 63;
+[PTBR+21] = "0100";
+[PTBR+22] = 64;
+[PTBR+23] = "0100";
+
+[PTBR+24] = 78;
+[PTBR+25] = "0110";
+[PTBR+26] = 79;
+[PTBR+27] = "0110";
+
+[PTBR+28] = 65;
+[PTBR+29] = "0100";
+[PTBR+30] = 66;
+[PTBR+31] = "0100";
+[PTBR+32] = -1;
+[PTBR+33] = "0000";
+[PTBR+34] = -1;
+[PTBR+35] = "0000";
+
+[PTBR+36] = 76;
+[PTBR+37] = "0110";
+[PTBR+38] = 77;
+[PTBR+39] = "0110:
+
+//page table for odd pgm start from 40
+[PTBR+40] = 63;
+[PTBR+41] = "0100";
+[PTBR+42] = 64;
+[PTBR+43] = "0100";
+
+[PTBR+44] = 85;
+[PTBR+45] = "0110";
+[PTBR+46] = 86;
+[PTBR+47] = "0110";
+
+[PTBR+48] = 83;
+[PTBR+49] = "0100";
+[PTBR+50] = -1;
+[PTBR+51] = "0000";
+[PTBR+52] = -1;
+[PTBR+53] = "0000";
+[PTBR+54] = -1;
+[PTBR+55] = "0000";
+
+[PTBR+56] = 87;
+[PTBR+57] = "0110";
+[PTBR+58] = 88;
+[PTBR+59] = "0110";
+
+//page table for even pgm start from 60
+[PTBR+60] = 63;
+[PTBR+61] = "0100";
+[PTBR+62] = 64;
+[PTBR+63] = "0100";
+
+[PTBR+64] = 89;
+[PTBR+65] = "0110";
+[PTBR+66] = 90;
+[PTBR+67] = "0110";
+
+[PTBR+68] = 84;
+[PTBR+69] = "0100";
+[PTBR+70] = -1;
+[PTBR+71] = "0000";
+[PTBR+72] = -1;
+[PTBR+73] = "0000";
+[PTBR+74] = -1;
+[PTBR+75] = "0000";
+
+[PTBR+76] = 91;
+[PTBR+77] = "0110";
+[PTBR+78] = 92;
+[PTBR+79] = "0110";
+
+//process table entries for init (starting from PROCESS_TABLE+16)
+[PROCESS_TABLE+17] = 1;
+[PROCESS_TABLE+20] = CREATED;
+[PROCESS_TABLE+27] = 80;
+[PROCESS_TABLE+28] = 0;
+[PROCESS_TABLE+29] = 8*512;
+[PROCESS_TABLE+30] = PAGE_TABLE_BASE+20;
+[PROCESS_TABLE+31] = 10;
+
+//process table entries for odd pgm (from 32)
+[PROCESS_TABLE+33] = 2;
+[PROCESS_TABLE+36] = CREATED;
+[PROCESS_TABLE+43] = 93;
+[PROCESS_TABLE+44] = 0;
+[PROCESS_TABLE+45] = 8*512;
+[PROCESS_TABLE+46] = PAGE_TABLE_BASE+40;
+[PROCESS_TABLE+47] = 10;
+
+//process table entries for even pgm (from 48)
+[PROCESS_TABLE+33] = 3;
+[PROCESS_TABLE+36] = CREATED;
+[PROCESS_TABLE+43] = 94;
+[PROCESS_TABLE+44] = 0;
+[PROCESS_TABLE+45] = 8*512;
+[PROCESS_TABLE+46] = PAGE_TABLE_BASE+60;
+[PROCESS_TABLE+47] = 10;
+
+
+//everyother process to terminated
+[PROCESS_TABLE+16*3+4] = TERMINATED;
+[PROCESS_TABLE+16*4+4] = TERMINATED;
+[PROCESS_TABLE+16*5+4] = TERMINATED;
+[PROCESS_TABLE+16*6+4] = TERMINATED;
+[PROCESS_TABLE+16*7+4] = TERMINATED;
+[PROCESS_TABLE+16*8+4] = TERMINATED;
+[PROCESS_TABLE+16*9+4] = TERMINATED;
+[PROCESS_TABLE+16*10+4] = TERMINATED;
+[PROCESS_TABLE+16*11+4] = TERMINATED;
+[PROCESS_TABLE+16*12+4] = TERMINATED;
+[PROCESS_TABLE+16*13+4] = TERMINATED;
+[PROCESS_TABLE+16*14+4] = TERMINATED;
+[PROCESS_TABLE+16*15+4] = TERMINATED;
+
+[76*512] = [65*512+1];
+[87*512] = [83*512+1]; //odd pgm
+[91*512] = [84*512+1]; // even pgm
+return;

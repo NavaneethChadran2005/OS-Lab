@@ -1,0 +1,13 @@
+load --init ../code/16stage/init.xsm
+load --os ../code/16stage/os.xsm
+load --idle ../code/16stage/idle.xsm
+load --library ../expl/library.lib
+load --int=timer ../code/16stage/timer.xsm
+load --int=console ../code/16stage/console_interrupt.xsm
+load --int=6 ../code/16stage/int6.xsm
+load --int=7 ../code/16stage/int7.xsm
+load --int=10 ../code/16stage/int10.xsm
+load --module 0 ../code/16stage/resource_manager.xsm
+load --module 4 ../code/16stage/device_manager.xsm
+load --module 5 ../code/16stage/scheduler.xsm
+load --module 7 ../code/16stage/boot_module.xsm

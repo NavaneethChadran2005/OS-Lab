@@ -1,0 +1,26 @@
+alias functionNum R1;
+alias currentPID R2;
+alias retVal R0;
+alias arg1 R3;
+
+if (functionNum == 3) then
+	//calling acquire terminal
+	multipush(R0, R1, R2, R3);
+	R1 = 8;
+	call RESOURCE_MANAGER;
+	//ignore R0 as no return value for acquire terminal
+	multipop(R0, R1, R2, R3);
+	
+	print R3;
+	
+	//calling release terminal
+	multipush(R0, R1, R2, R3);
+	R1 = 9;
+	call RESOURCE_MANAGER;
+	R4 = R0;
+	multipop(R0, R1, R2, R3);
+	R0 = R4; //return value stored in R0;
+	
+	return;
+endif;
+return;

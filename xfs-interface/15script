@@ -1,0 +1,10 @@
+load --os ../code/15stage/os.xsm
+load --module 7 ../code/15stage/boot_module.xsm
+load --int=timer ../code/15stage/timer.xsm
+load --int=10 ../code/15stage/int10.xsm
+load --init ../code/15stage/init.xsm
+load --idle ../code/15stage/idle.xsm
+load --module 5 ../code/15stage/scheduler.xsm
+load --int=7 ../code/15stage/int7.xsm
+load --module 4 ../code/15stage/device_manager.xsm
+load --module 0 ../code/15stage/resource_manager.xsm

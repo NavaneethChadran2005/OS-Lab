@@ -1,0 +1,7 @@
+load --os ../code/13stage/os.xsm
+load --module 7 ../code/13stage/boot_module.xsm
+load --idle ../code/12stage/idle.xsm
+load --init ../code/12stage/assg_init.xsm
+load --int=timer ../code/12stage/timer.xsm
+load --int=7 ../code/10stage/int7.xsm
+load --int=10 ../code/10stage/halt.xsm

@@ -1,0 +1,14 @@
+int main() {
+    decl
+    str filename;
+    int temp;
+    enddecl
+
+    begin
+    temp = exposcall("Write", -2, "Enter name : ");
+    temp = exposcall("Read", -1, filename);
+    temp = exposcall("Exec", filename);
+    temp = exposcall("Write", -2, "NO FILE EXISTS");
+    return 0;
+    end
+}

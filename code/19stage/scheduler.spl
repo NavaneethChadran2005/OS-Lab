@@ -1,0 +1,45 @@
+alias currPID R0;
+currPID = [SYSTEM_STATUS_TABLE+1];
+
+multipush(BP);
+
+[PROCESS_TABLE + currPID*16 + 12] = SP % 512;
+[PROCESS_TABLE + currPID*16 + 14] = PTBR;
+[PROCESS_TABLE + currPID*16+ 15] = PTLR;
+
+alias check R1;
+check = currPID;
+
+currPID = (currPID + 1)%16;
+
+while ([PROCESS_TABLE + currPID*16 + 4] != READY && [PROCESS_TABLE + currPID*16 + 4] != CREATED) do 
+	if (currPID == check) then
+		currPID = 0;
+		break;		
+	endif;
+	if (currPID == 0) then
+		currPID = 1;
+		continue;
+	endif;
+	
+	currPID = (currPID + 1)%16;
+endwhile;
+
+
+
+SP = [PROCESS_TABLE + currPID*16 + 11]*512 + [PROCESS_TABLE + currPID*16 + 12];
+PTBR = [PROCESS_TABLE + currPID*16 + 14];
+PTLR = [PROCESS_TABLE + currPID*16 + 15];
+
+[SYSTEM_STATUS_TABLE + 1] = currPID;
+
+if ([PROCESS_TABLE + currPID*16 + 4] == CREATED) then
+	SP = [PROCESS_TABLE + currPID*16 + 13];
+	[PROCESS_TABLE + currPID*16 + 4] = RUNNING;
+	[PROCESS_TABLE + currPID*16 + 9] = 0;
+	ireturn;
+endif;
+
+[PROCESS_TABLE + currPID*16 + 4] = RUNNING;
+multipop(BP);
+return;

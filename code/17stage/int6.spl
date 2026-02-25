@@ -1,0 +1,40 @@
+[PROCESS_TABLE + 16*[SYSTEM_STATUS_TABLE+1] + 9] = 7;
+
+alias userSP R0;
+userSP = SP;
+
+[PROCESS_TABLE + 16*[SYSTEM_STATUS_TABLE+1] + 13] = SP;
+
+SP = 512*[PROCESS_TABLE + 16*[SYSTEM_STATUS_TABLE+1] + 11] - 1; 
+
+alias syscall_num R1; 
+alias fileDesc R2; //arg1
+alias word R3; //arg2
+
+alias retVal R4; 
+
+syscall_num = [512*[PTBR + 2*(userSP-5)/512] + (userSP-5)%512];
+fileDesc = [512*[PTBR + 2*(userSP-4)/512] + (userSP-4)%512];
+word = [512*[PTBR + 2*(userSP-3)/512] + (userSP-3)%512];
+retVal = 512*[PTBR + 2*(userSP-1)/512] + (userSP-1)%512;
+breakpoint;
+
+if(fileDesc != -1) then
+    [retVal] = -1;
+else
+    multipush(R0, R1, R2, R3, R4);
+    R1 = 4;
+    R2 = [SYSTEM_STATUS_TABLE+1];
+    //R3 remains same
+    
+    call DEVICE_MANAGER;
+
+    multipop(R0, R1, R2, R3, R4);
+    [retVal] = 0;
+endif;
+
+[PROCESS_TABLE + 16*[SYSTEM_STATUS_TABLE+1] + 9] = 0;
+
+SP = [PROCESS_TABLE + 16*[SYSTEM_STATUS_TABLE+1] + 13];
+
+ireturn;

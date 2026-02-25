@@ -1,0 +1,22 @@
+// Save user SP in process table
+[PROCESS_TABLE + ([SYSTEM_STATUS_TABLE + 1] * 16) + 13] = SP;
+
+// Set SP to User Area page
+SP = [PROCESS_TABLE + ([SYSTEM_STATUS_TABLE + 1] * 16) + 11] * 512 - 1;
+
+backup;
+
+[PROCESS_TABLE + [SYSTEM_STATUS_TABLE+1]*16 + 4] = READY;
+
+breakpoint;
+
+call SCHEDULER;
+
+breakpoint;
+
+restore;
+
+SP = [PROCESS_TABLE + [SYSTEM_STATUS_TABLE+1]*16 + 13];
+[PROCESS_TABLE + [SYSTEM_STATUS_TABLE+1]*16 + 9] = 0;
+
+ireturn;

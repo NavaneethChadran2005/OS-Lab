@@ -1,0 +1,21 @@
+[PROCESS_TABLE + 16*[SYSTEM_STATUS_TABLE+1] + 13] = SP;
+SP = 512*[PROCESS_TABLE + 16*[SYSTEM_STATUS_TABLE+1] + 11] - 1;
+
+backup;
+
+breakpoint;
+alias reqPID R0;
+reqPID = [TERMINAL_STATUS_TABLE+1];
+
+[PROCESS_TABLE + (reqPID * 16) + 8]  = P0;
+//release terminal
+multipush(R0);
+breakpoint;
+R1 = 9;
+R2 = reqPID;
+call RESOURCE_MANAGER;
+breakpoint;
+multipop(R0);
+restore;
+SP = [PROCESS_TABLE + 16*[SYSTEM_STATUS_TABLE+1] + 13];
+ireturn;

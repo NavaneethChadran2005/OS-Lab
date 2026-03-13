@@ -34,14 +34,7 @@ endif;
 
 if (syscallNum == 13) then //wait
     //arg1 is pid
-    if(arg1 < 0 || arg1 >= 16 || arg1 == pid) then
-        [retAddr] = -1;
-        SP = userSP;
-        [PROCESS_TABLE + 16*pid + 9] = 0;
-        ireturn;
-    endif;
-
-    if([PROCESS_TABLE + 16*arg1 + 4] == TERMINATED) then
+    if(arg1 < 0 || arg1 >= 16 || arg1 == pid || [PROCESS_TABLE + 16*arg1 + 4] == TERMINATED) then
         [retAddr] = -1;
         SP = userSP;
         [PROCESS_TABLE + 16*pid + 9] = 0;
@@ -70,7 +63,7 @@ if (syscallNum == 14) then //signal
         endif;
         R6 = R6 + 1;
     endwhile;
-
+    [retAddr] = 0;
     [PROCESS_TABLE + 16*pid + 9] = 0;
     SP = userSP;
     ireturn;

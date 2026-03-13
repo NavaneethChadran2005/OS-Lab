@@ -48,7 +48,7 @@ if(syscallNum == 19) then //semlock
     endwhile;
 
     [SEMAPHORE_TABLE + 4*sem_table_index] = pid;
-   
+    [PROCESS_TABLE + 16*pid + 4] = READY; //do i need this?
     breakpoint;
     R0 = 0;
     goto return_to_user;
@@ -79,13 +79,8 @@ if(syscallNum == 20) then //semunlock
         R9 = 0;
         while(R9 < 16) do
             R10 = PROCESS_TABLE + 16*R9;
-            if(
-                [R10 + 4] == WAIT_SEMAPHORE
-                &&
-                [R10 + 5] == sem_table_index
-              )
-            then
-                
+            if([R10 + 4] == WAIT_SEMAPHORE && [R10 + 5] == sem_table_index)
+            then                
                 [R10 + 4] = READY;
             endif;
             R9 = R9+1;

@@ -21,7 +21,7 @@ if(funcNum == 6) then //acquire semaphore
     R0 = 0;
     while(R0 < 32) do
         if([SEMAPHORE_TABLE + 4*R0 + 1] == 0) then
-            [SEMAPHORE_TABLE + 4*R0 + 0] = -1; //locking pid
+            [SEMAPHORE_TABLE + 4*R0 + 0] = R2; //locking pid
             [SEMAPHORE_TABLE + 4*R0 + 1] = 1;  //process count
             break;
         endif;

@@ -47,18 +47,17 @@ R4 = PROCESS_TABLE + 16*child_pid;
 R5 = PROCESS_TABLE + 16*currPID;  
 
 //Initializing process table entries of child
-[R4 + 3] = [R5 + 3]; //copy userid
-[R4 + 6] = [R5 + 6]; //copy swap flag
-[R4 + 7] = [R5 + 7]; //copy inode index
-[R4 + 10] = [R5 + 10]; //copy user area swap status
-[R4 + 13] = [R5 + 13]; //copy user SP
+[R4 + 3] = [R5 + 3]; 
+[R4 + 6] = [R5 + 6]; 
+[R4 + 7] = [R5 + 7]; 
+[R4 + 10] = [R5 + 10]; 
+[R4 + 13] = [R5 + 13]; 
 
 [R4 + 0] = 0; //set TICK
 [R4 + 2] = currPID; //set PPID
 [R4 + 9] = 0; //set mode flag
 [R4 + 11] = R0; //set user area page
 [R4 + 12] = 0; //set KPTR
-//PID, PTBR and PTLR are already initialized in get_free_pcb() function
 
 //Copy resource table content to child
 R4 = ([PROCESS_TABLE + 16*child_pid + 11] + 1)*512 - 16;
@@ -129,9 +128,6 @@ endwhile;
 //Store BP on top of kernel stack of child process
 [[PROCESS_TABLE + 16*child_pid + 11]*512] = BP;
 
-//Set status to CREATED. If this step was done earlier,
-//if we end up waiting for memory, scheduler will go ahead
-//and schedule this partially created child
 [PROCESS_TABLE + 16*child_pid + 4] = CREATED;
 
 //Setup return values to parent and child process

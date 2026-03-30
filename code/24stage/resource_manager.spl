@@ -1,0 +1,172 @@
+alias retVal R0;
+alias funcNum R1;
+alias arg1 R2;
+alias arg2 R3;
+
+if(funcNum == 1) then //acquire buffer
+    while([BUFFER_TABLE + 4*arg1 + 2] != -1) do
+        [PROCESS_TABLE + 16*arg2 + 4] = WAIT_BUFFER;
+        [PROCESS_TABLE + 16*arg2 + 5] = arg1;
+
+        multipush(R0, R1, R2, R3);
+        call SCHEDULER;
+        multipop(R0, R1, R2, R3);
+    endwhile;
+
+    [BUFFER_TABLE + 4*arg1 + 2] = arg2;
+
+    R0 = 0;
+    return;
+endif;
+
+if(funcNum == 2) then  //release buffer
+    if([BUFFER_TABLE + 4*arg1 + 2] != arg2) then
+        R0 = -1;
+        return;
+    endif;
+
+    [BUFFER_TABLE + 4*arg1 + 2] = -1;
+
+    R4 = 1;
+    while(R4 < 16) do
+        R5 = PROCESS_TABLE + 16*R4;
+        if([R5 + 4] == WAIT_BUFFER && [R5 + 5] == arg1) then
+            [R5 + 4] = READY;
+        endif;
+        R4 = R4 + 1;
+    endwhile;
+
+    R0 = 0;
+    return;
+endif;
+
+if(funcNum == 3) then //acquire disk
+    while([DISK_STATUS_TABLE] == 1) do
+        [PROCESS_TABLE + 16*arg1 + 4] = WAIT_DISK;
+        multipush(R0, R1, R2, R3);
+        call SCHEDULER;
+        multipop(R0, R1, R2, R3);
+    endwhile;
+
+    [DISK_STATUS_TABLE + 0] = 1;
+    [DISK_STATUS_TABLE + 4] = arg1;
+
+    return;
+endif;
+
+if(funcNum == 4) then //acquire inode
+    while([FILE_STATUS_TABLE + 4*arg1 + 0] != -1) do
+        [PROCESS_TABLE + 16*arg2 + 4] = WAIT_FILE;
+        [PROCESS_TABLE + 16*arg2 + 5] = arg1;
+
+        multipush(R0, R1, R2, R3);
+        call SCHEDULER;
+        multipop(R0, R1, R2, R3);
+    endwhile;
+
+    if([INODE_TABLE + 16*arg1 + 1] == -1) then //file got deleted by the time lock was acquired
+        R0 = -1;
+        return;
+    endif;
+
+    [FILE_STATUS_TABLE + 4*arg1 + 0] = arg2;
+
+    R0 = 0;
+    return;
+endif;
+
+if(funcNum == 5) then  //release inode
+    if([FILE_STATUS_TABLE + 4*arg1 + 0] != arg2) then  //Inode was locked by some other process
+        R0 = -1;
+        return;
+    endif;
+
+    [FILE_STATUS_TABLE + 4*arg1 + 0] = -1;
+
+    R4 = 1;
+    while(R4 < 16) do
+        R5 = PROCESS_TABLE + 16*R4;
+        if([R5 + 4] == WAIT_FILE && [R5 + 5] == arg1) then
+            [R5 + 4] = READY;
+        endif;
+        R4 = R4 + 1;
+    endwhile;
+
+    R0 = 0;
+    return;
+endif;
+
+if(funcNum == 6) then //acquire semaphore
+    R0 = 0;
+    while(R0 < 32) do
+        if([SEMAPHORE_TABLE + 4*R0 + 1] == 0) then
+            [SEMAPHORE_TABLE + 4*R0 + 0] = -1; //locking pid
+            [SEMAPHORE_TABLE + 4*R0 + 1] = 1;  //process count
+            break;
+        endif;
+        R0 = R0 + 1;
+    endwhile;
+
+    if(R0 >= 32) then
+        R0 = -1;
+    endif;
+    
+    return;
+endif;
+
+if(funcNum == 7) then //release semaphore
+    if([SEMAPHORE_TABLE + 4*arg1] == arg2) then //If semaphore is locked by arg2
+
+        [SEMAPHORE_TABLE + 4*arg1] = -1; //unlocking semaphore
+
+        R4 = 0;
+        while(R4 < 16) do
+            R5 = PROCESS_TABLE + 16*R4;
+            if([R5 + 4] == WAIT_SEMAPHORE && [R5 + 5] == arg2) then
+                [R5 + 4] = READY;
+            endif;
+
+            R4 = R4 + 1;
+        endwhile;
+    endif;
+    
+    R5 = SEMAPHORE_TABLE + 4*arg1;
+    [R5 + 1] = [R5 + 1] - 1;
+
+    R0 = 0;
+    return;
+endif;
+
+if(funcNum == 8) then //acquire terminal
+    while([TERMINAL_STATUS_TABLE] == 1) do
+        [PROCESS_TABLE + 16*arg1 + 4] = WAIT_TERMINAL;
+        multipush(R0, R1, R2, R3);
+        call SCHEDULER;
+        multipop(R0, R1, R2, R3);
+    endwhile;
+
+    [TERMINAL_STATUS_TABLE] = 1;
+    [TERMINAL_STATUS_TABLE+1] = arg1;
+    return;
+endif;
+
+if(funcNum == 9)then //release terminal
+    if([TERMINAL_STATUS_TABLE+1] != arg1) then
+        R0 = -1;
+        return;
+    endif;
+
+    [TERMINAL_STATUS_TABLE] = 0;
+
+    R1 = 1;
+    
+    while(R1 < 16) do
+        if([PROCESS_TABLE + 16*R1 + 4] == WAIT_TERMINAL) then
+            [PROCESS_TABLE + 16*R1 + 4] = READY;
+        endif;
+        R1 = R1+1;
+    endwhile;
+
+    R0 = 0;
+    return;
+endif;

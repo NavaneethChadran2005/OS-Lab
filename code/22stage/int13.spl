@@ -72,7 +72,6 @@ if(syscallNum == 18) then //Semrelease
     goto return_to_user;
 endif;
 
-
 return_to_user:
     [PROCESS_TABLE + 16*pid + 9] = 0;
     SP = userSP;

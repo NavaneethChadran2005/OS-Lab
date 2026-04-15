@@ -1,0 +1,49 @@
+int main(){
+decl
+int fd, n, temp, seekRet;
+str fname, uname, user;
+
+enddecl
+
+begin
+    write("Username: ");
+    read(user);
+
+    temp = exposcall("Getuid", user);
+
+    if(temp <= 0) then
+        write("User not exist");
+    else
+        fd = exposcall("Open", "root");
+
+        if(fd < 0) then
+            write("ru fail");
+        else
+            while(1 == 1) do
+                // If Read returns -2, we hit EOF. Break the loop.
+                temp = exposcall("Read", fd, fname);
+                if (temp == -2) then
+                    break;
+                endif;
+
+                // Use a separate variable for Seek so we don't overwrite temp
+                seekRet = exposcall("Seek", fd, 2);
+                
+                temp = exposcall("Read", fd, uname);
+
+                if((fname != "-1") AND (uname == user)) then
+                    n = exposcall("Delete", fname);
+                    if(n < 0) then
+                        write("fail");
+                        write(n);
+                    endif;
+                endif;
+
+                seekRet = exposcall("Seek", fd, 4);
+            endwhile;
+        endif;
+    endif;
+
+    return 0;
+end
+}

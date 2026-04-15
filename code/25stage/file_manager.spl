@@ -103,8 +103,6 @@ if(funcNum == 2) then //Buffered read
     R0 = 0;
     return;
 endif;
-     
-
 
 if(funcNum == 3) then  //open
     R5 = 0;

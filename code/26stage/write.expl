@@ -1,0 +1,24 @@
+int main(){
+decl
+    int fd, permission, temp;
+    str buf, fname, n;
+enddecl
+
+begin
+    write("Filename:");
+    read(fname);
+    fd = exposcall("Open", fname);
+    
+    if(fd < 0) then
+        write("Open fail");
+    else
+        write("Enter contents");
+        read(n);
+        temp = exposcall("Write", fd, n);
+
+        write("Written");
+    endif;
+
+    return 0;
+end
+}

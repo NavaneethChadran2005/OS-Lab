@@ -1,0 +1,29 @@
+int main(){
+decl
+    int fd, permission, temp;
+    str buf, fname, n;
+enddecl
+
+begin
+
+    fd = exposcall("Open", "test.dat");
+    
+    if(fd < 0) then
+        write("Open fail");
+    else
+        read(n);
+        temp = exposcall("Write", fd, n);
+
+        write("Written");
+
+        temp = exposcall("Seek", fd, -1);
+        while(temp >= 0) do
+            temp = exposcall("Read", fd, buf);
+            write(buf);
+            temp = exposcall("Seek", fd, -2);
+        endwhile;
+    endif;
+
+    return 0;
+end
+}

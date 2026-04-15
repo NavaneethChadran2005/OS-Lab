@@ -1,0 +1,26 @@
+load --os ../code/22stage/os.xsm
+load --init ../code/22stage/init.xsm
+load --idle ../code/22stage/idle.xsm
+load --int=4 ../code/23stage/int4.xsm
+load --int=5 ../code/25stage/int5.xsm
+load --int=6 ../code/24stage/int6.xsm
+load --int=7 ../code/25stage/int7.xsm
+load --int=8 ../code/24stage/int8.xsm
+load --int=9 ../code/22stage/int9.xsm
+load --int=10 ../code/22stage/int10.xsm
+load --int=11 ../code/22stage/int11.xsm
+load --int=13 ../code/22stage/int13.xsm
+load --int=14 ../code/22stage/int14.xsm
+load --int=15 ../code/25stage/int15.xsm
+load --int=disk ../code/22stage/disk_interrupt.xsm
+load --int=timer ../code/22stage/timer.xsm
+load --int=console ../code/22stage/console.xsm
+load --module 0 ../code/24stage/resource_manager.xsm
+load --module 1 ../code/25stage/process_manager.xsm
+load --module 2 ../code/25stage/memory_manager.xsm
+load --module 3 ../code/25stage/file_manager.xsm
+load --module 4 ../code/23stage/device_manager.xsm
+load --module 5 ../code/22stage/scheduler.xsm
+load --module 7 ../code/24stage/boot_module.xsm
+load --exhandler ../code/22stage/exhandler.xsm
+load --library ../expl/library.lib

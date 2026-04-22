@@ -48,7 +48,7 @@ if(syscallNum == 19) then //semlock
     endwhile;
 
     [SEMAPHORE_TABLE + 4*sem_table_index] = pid;
-    [PROCESS_TABLE + 16*pid + 4] = READY; //do i need this?
+    [PROCESS_TABLE + 16*pid + 4] = READY; 
     breakpoint;
     R0 = 0;
     goto return_to_user;

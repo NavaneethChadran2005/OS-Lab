@@ -118,8 +118,6 @@ if(funcNum == 3) then  //open
         return;
     endif;
     
-    //The following check was supposed to be done after acquiring inode lock,
-    //but idk why
     if([INODE_TABLE + 16*R5 + 0] == EXEC) then
         R0 = -1;
         return;
